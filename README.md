@@ -1,4 +1,4 @@
-# node Krawler [![Build Status](https://travis-ci.org/ondrs/node-sauto-api.png?branch=master)](https://travis-ci.org/ondrs/node-sauto-api)
+# node Sauto API [![Build Status](https://travis-ci.org/ondrs/node-sauto-api.png?branch=master)](https://travis-ci.org/ondrs/node-sauto-api)
 
 Node.js promise based wrapper over Sauto XML-RPC API.
 All methods are implemented with the same name as the original XML-RPC API provides
