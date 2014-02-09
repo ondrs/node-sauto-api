@@ -1,6 +1,6 @@
 {
   "name": "sauto-api",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Node.js promise based wrapper over Sauto XML-RPC API.",
   "keywords": [
     "sauto",
