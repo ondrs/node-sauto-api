@@ -1,6 +1,5 @@
 var SautoApi = require(__dirname + '/../lib/index');
 var expect = require('chai').expect;
-var should = require('chai').should;
 
 
 var login = 'import',
