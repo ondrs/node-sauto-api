@@ -1,6 +1,6 @@
 {
   "name": "sauto-api",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Node.js promise based wrapper over Sauto XML-RPC API.",
   "keywords": [
     "sauto",
@@ -23,8 +23,7 @@
       "url": "http://github.com/ondrs/node-sauto-api/blob/master/LICENSE.md"
     }
   ],
-  "repository":
-  {
+  "repository": {
     "type": "git",
     "url": "https://github.com/ondrs/node-sauto-api.git"
   },
@@ -34,7 +33,8 @@
     "q": "~1.0.1"
   },
   "devDependencies": {
-    "chai": "~1.9.0"
+    "chai": "~1.9.0",
+    "async": "~0.9.0"
   },
   "scripts": {
     "test": "mocha test/index"

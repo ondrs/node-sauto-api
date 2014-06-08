@@ -1,5 +1,7 @@
-var SautoApi = require(__dirname + '/../lib/index');
-var expect = require('chai').expect;
+var SautoApi = require(__dirname + '/../lib/index'),
+  expect = require('chai').expect,
+  async = require('async'),
+  fs = require('fs');
 
 
 var login = 'import',
@@ -26,10 +28,11 @@ describe('Sauto API tests', function() {
 
       api
         .version()
-        .done(function(version) {
+        .then(function(version) {
           expect(version).to.be.a('string');
           done();
-        });
+        }, done)
+        .done();
     });
 
 
@@ -40,9 +43,10 @@ describe('Sauto API tests', function() {
         .then(function() {
           return api.logout()
         })
-        .done(function() {
+        .then(function() {
           done();
-        })
+        }, done)
+        .done();
     });
 
   });
@@ -52,56 +56,225 @@ describe('Sauto API tests', function() {
     before(function(done) {
       api
         .login()
-        .done(function() {
+        .then(function() {
           done();
-        });
+        }, done)
+        .done();
     });
 
     after(function(done) {
       api
         .logout()
-        .done(function() {
+        .then(function() {
           done();
-        });
+        }, done)
+        .done();
     });
 
 
     it('should get list of cars', function(done) {
       api
         .listOfCars()
-        .done(function(ids) {
+        .then(function(ids) {
           expect(ids).to.be.instanceOf(Array);
           done();
-        })
+        }, done)
+        .done();
     });
 
 
     // TODO: implement...
 
-    it('should add car');
-    it('should get a car');
-    it('should edit car');
-    it('should get a car');
-    it('should get car id');
+    describe('car manipulation', function() {
 
-    it('should get list of photos');
-    it('should get list of equipment');
+      var carId,
+        car = require(__dirname + '/data/car.js'),
+        equips = [3, 4, 5, 6, 7, 8];
 
-    it('should add photo');
-    it('should get photo id');
-    it('should delete photo');
+      before(function(done) {
 
-    it('should add equipment');
+        api
+          .addEditCar(car)
+          .then(function(result) {
+            expect(result).to.be.a('number');
+            carId = parseInt(result);
+            done();
+          }, done)
+          .done();
+      });
+
+
+      after(function(done) {
+
+        api
+          .delCar(carId)
+          .then(function(result) {
+            done();
+          }, done)
+          .done();
+      });
+
+
+      it('should get a car', function(done) {
+
+        api
+          .getCar(carId)
+          .then(function(result) {
+            expect(result).to.be.an('Object');
+            done();
+          }, done)
+          .done();
+      });
+
+
+      it('should edit car', function(done) {
+
+        car.car_id = carId;
+
+        api
+          .addEditCar(car)
+          .then(function(result) {
+            expect(result).to.be.a('number');
+            done();
+          }, done)
+          .done();
+      });
+
+
+      it('should get car id', function(done) {
+        var car = require(__dirname + '/data/car.js');
+
+        api
+          .getCarId(car.custom_id)
+          .then(function(result) {
+            expect(result).to.be.equal(carId);
+            done();
+          }, done)
+          .done();
+      });
+
+
+      it('should add equipment', function(done) {
+
+        api
+          .addEquipment(carId, equips)
+          .then(function(result) {
+            done();
+          }, done)
+          .done();
+      });
+
+
+      it('should get list of equipment', function(done) {
+
+        api
+          .listOfEquipment(carId)
+          .then(function(result) {
+            expect(result).to.be.an('Array');
+            done();
+          }, done)
+          .done();
+      });
+
+
+      describe('photo manipulation', function() {
+
+        var images = ['1.jpg', '2.jpg', '3.jpg'];
+
+        before(function(done) {
+
+          var photos = [];
+
+          images.forEach(function(img, i) {
+
+            var content = fs.readFileSync(__dirname + '/data/' + img);
+
+            var base64Image = new Buffer(content, 'binary').toString('base64');
+
+            photos.push({
+              b64: new Buffer(base64Image, 'base64'),
+              client_photo_id: img,
+              main: i
+            });
+          });
+
+
+          async.each(photos, function(photo, callback) {
+
+            api
+              .addEditPhoto(carId, photo)
+              .then(function(result) {
+                callback();
+              }, callback)
+              .done();
+
+          }, done);
+
+        });
+
+
+        it('should get list of photos', function(done) {
+
+          api
+            .listOfPhotos(carId)
+            .then(function(result) {
+              expect(result).to.be.an('Array');
+              done();
+            }, done)
+            .done();
+        });
+
+
+        it('should get photo id', function(done) {
+
+          api
+            .getPhotoId(carId, images[0])
+            .then(function(result) {
+              expect(result).to.be.a('number');
+              done();
+            }, done)
+            .done();
+        });
+
+
+        describe('delete photo', function() {
+
+          var photoId;
+
+          before('should get photo id', function(done) {
+
+            api
+              .getPhotoId(carId, images[0])
+              .then(function(result) {
+                photoId = result;
+                done();
+              }, done)
+              .done();
+          });
+
+
+          it('should delete photo', function(done) {
+
+            api
+              .delPhoto(photoId)
+              .then(function(result) {
+                done();
+              }, done)
+              .done();
+          });
+
+        });
+      });
+    });
+
+
 
     it('should add video');
     it('should delete video');
 
-    it('should delete car');
+
 
   });
-
-
-
 
 
 });
