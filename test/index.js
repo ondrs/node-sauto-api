@@ -96,8 +96,9 @@ describe('Sauto API tests', function() {
         api
           .addEditCar(car)
           .then(function(result) {
-            expect(result).to.be.a('number');
-            carId = parseInt(result);
+            expect(result.error).to.be.false;
+            expect(result.id).to.be.a('number');
+            carId = parseInt(result.id);
             done();
           }, done)
           .done();
@@ -134,7 +135,8 @@ describe('Sauto API tests', function() {
         api
           .addEditCar(car)
           .then(function(result) {
-            expect(result).to.be.a('number');
+            expect(result.error).to.be.false;
+            expect(result.id).to.be.a('number');
             done();
           }, done)
           .done();
