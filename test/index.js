@@ -6,16 +6,16 @@ var SautoApi = require(__dirname + '/../lib/index'),
 
 var login = 'import',
   password = 'test',
+  swKey = 'testkey-571769',
   config = {
     "connection" : {
       "host": "import.sauto.cz",
         "port": 80,
         "path": "/RPC2"
-    },
-    "swKey": "testkey-571769"
+    }
   };
 
-var api = new SautoApi(config, login, password);
+var api = new SautoApi(config, login, password, swKey);
 
 describe('Sauto API tests', function() {
 
