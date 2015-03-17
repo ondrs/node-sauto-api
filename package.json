@@ -28,9 +28,10 @@
     "url": "https://github.com/ondrs/node-sauto-api.git"
   },
   "dependencies": {
-    "xmlrpc": "~1.2.0",
     "MD5": "~1.2.0",
-    "q": "~1.0.1"
+    "q": "~1.0.1",
+    "underscore": "^1.8.2",
+    "xmlrpc": "~1.2.0"
   },
   "devDependencies": {
     "chai": "~1.9.0",
