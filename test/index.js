@@ -179,9 +179,68 @@ describe('Sauto API tests', function() {
       });
 
 
-      describe('photo manipulation', function() {
+      it('should insert new car with errors', function(done) {
+
+        delete car.vin;
+        delete car.custom_id;
+        delete car.kind_id;
+        delete car.brand_id;
+        delete car.model_id;
+        delete car.manufacturer_id;
+
+        api
+          .addEditCar({})
+          .catch(function(err) {
+            expect(err.error).to.be.eql('Auto s neuplnym kind_id, manufacturer_id, model_id a body_id');
+            expect(err.id).to.be.undefined;
+            done();
+          })
+          .done();
+      });
+
+
+      describe('small photos manipulation', function() {
 
         var images = ['1.jpg', '2.jpg', '3.jpg'];
+
+        it('should fail', function(done) {
+
+          var photos = [];
+
+          images.forEach(function(img, i) {
+
+            var content = fs.readFileSync(__dirname + '/data/' + img);
+
+            var base64Image = new Buffer(content, 'binary').toString('base64');
+
+            photos.push({
+              b64: new Buffer(base64Image, 'base64'),
+              client_photo_id: img,
+              main: i
+            });
+          });
+
+
+          async.each(photos, function(photo, callback) {
+
+            api
+              .addEditPhoto(carId, photo)
+              .catch(function(err) {
+                expect(err.error).to.eql('Fotografie je v malem rozliseni');
+                callback();
+              })
+              .done();
+
+          }, done);
+
+        });
+
+      })
+
+
+      describe('photo manipulation', function() {
+
+        var images = ['1_big.jpg', '2_big.jpg', '3_big.jpg'];
 
         before(function(done) {
 
